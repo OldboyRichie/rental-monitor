@@ -3,206 +3,72 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>台中租屋監控</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif; background: #F5F4F0; color: #1a1a1a; min-height: 100vh; }
-.topbar { background: #fff; border-bottom: 1px solid #e8e6e0; padding: 0 1.25rem; height: 54px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-.logo { font-size: 17px; font-weight: 700; }
-.logo span { color: #185FA5; }
-.badge-live { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; padding: 4px 12px; border-radius: 20px; background: #EAF3DE; color: #3B6D11; font-weight: 500; }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: #639922; animation: pulse 1.5s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
-.container { max-width: 900px; margin: 0 auto; padding: 1.25rem 1rem; }
-.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.25rem; }
-.stat-card { background: #fff; border-radius: 12px; padding: 0.9rem 1rem; border: 1px solid #eae8e3; }
-.stat-label { font-size: 11px; color: #999; margin-bottom: 5px; }
-.stat-val { font-size: 24px; font-weight: 700; color: #1a1a1a; }
-.stat-sub { font-size: 10px; color: #bbb; margin-top: 2px; }
-.scan-info { background: #fff; border: 1px solid #eae8e3; border-radius: 10px; padding: 0.7rem 1.1rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; font-size: 13px; color: #666; }
-.refresh-btn { font-size: 12px; padding: 4px 12px; border: 1px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; }
-.refresh-btn:hover { background: #f5f5f5; }
-.filters { display: flex; gap: 7px; margin-bottom: 1rem; flex-wrap: wrap; }
-.filter-btn { font-size: 13px; padding: 6px 14px; border-radius: 20px; border: 1px solid #ddd; background: #fff; color: #666; cursor: pointer; transition: all 0.15s; }
-.filter-btn.active { background: #185FA5; color: #fff; border-color: #185FA5; }
-.sort-row { display: flex; align-items: center; gap: 7px; margin-bottom: 1rem; font-size: 12px; color: #aaa; flex-wrap: wrap; }
-.sort-btn { font-size: 12px; padding: 4px 10px; border: 1px solid #ddd; border-radius: 6px; background: #fff; cursor: pointer; color: #666; }
-.sort-btn.active { border-color: #185FA5; color: #185FA5; background: #EFF6FF; }
-.section-label { font-size: 11px; color: #bbb; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
-.card-list { display: flex; flex-direction: column; gap: 10px; }
-.card { background: #fff; border: 1px solid #eae8e3; border-radius: 14px; padding: 1rem 1.2rem; transition: box-shadow 0.15s; }
-.card:hover { border-color: #c5c2bb; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-.card.is-new { border-left: 3px solid #378ADD; }
-.card-row1 { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; gap: 10px; }
-.card-title { font-size: 15px; font-weight: 600; color: #1a1a1a; line-height: 1.4; flex: 1; }
-.card-price { font-size: 17px; font-weight: 700; color: #185FA5; white-space: nowrap; }
-.price-unit { font-size: 11px; font-weight: 400; color: #bbb; }
-.card-row2 { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 9px; }
-.tag { font-size: 11px; padding: 3px 8px; border-radius: 5px; font-weight: 500; }
-.tag-new { background: #EAF3DE; color: #3B6D11; }
-.tag-home { background: #E6F1FB; color: #185FA5; }
-.tag-shop { background: #E1F5EE; color: #0F6E56; }
-.tag-area { background: #F1EFE8; color: #5F5E5A; }
-.tag-size { background: #F1EFE8; color: #5F5E5A; }
-.card-icons { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 9px; }
-.icon-tag { font-size: 11px; background: #F5F4F0; color: #666; border-radius: 4px; padding: 2px 8px; }
-.card-footer { display: flex; align-items: center; justify-content: space-between; }
-.card-meta { font-size: 12px; color: #ccc; }
-.card-link { font-size: 13px; color: #185FA5; text-decoration: none; padding: 5px 13px; border: 1px solid #c5d9f0; border-radius: 7px; }
-.card-link:hover { background: #E6F1FB; }
-.no-data { text-align: center; padding: 4rem 2rem; color: #bbb; font-size: 15px; }
-.no-data small { display: block; font-size: 13px; margin-top: 8px; }
-@media (max-width: 600px) {
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
-  .container { padding: 1rem 0.75rem; }
-}
+body { font-family: -apple-system, "PingFang TC", sans-serif; background: #F5F4F0; padding: 1rem; }
+.debug { background: #1a1a1a; color: #00ff00; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 13px; margin-bottom: 1rem; white-space: pre-wrap; word-break: break-all; }
+.card { background: #fff; border-radius: 12px; padding: 1rem; margin-bottom: 10px; border: 1px solid #eae8e3; }
+.btn { padding: 8px 16px; background: #185FA5; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="logo">台中<span>租屋</span>監控</div>
-  <span class="badge-live"><span class="dot"></span>即時監控</span>
-</div>
-<div class="container">
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-label">今日新上架</div><div class="stat-val" id="s-new">—</div><div class="stat-sub">過去24小時</div></div>
-    <div class="stat-card"><div class="stat-label">透天混合</div><div class="stat-val" id="s-both">—</div><div class="stat-sub">店住合一</div></div>
-    <div class="stat-card"><div class="stat-label">住家</div><div class="stat-val" id="s-home">—</div><div class="stat-sub">25坪↑・可寵・車位</div></div>
-    <div class="stat-card"><div class="stat-label">店面</div><div class="stat-val" id="s-shop">—</div><div class="stat-sub">30坪↑・車位</div></div>
-  </div>
-  <div class="scan-info">
-    <span id="scan-status">載入中...</span>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <span id="last-scan" style="font-size:12px;color:#bbb;"></span>
-      <button class="refresh-btn" onclick="loadData()">重新整理</button>
-    </div>
-  </div>
-  <div class="filters">
-    <button class="filter-btn active" onclick="setFilter('all',this)">全部</button>
-    <button class="filter-btn" onclick="setFilter('home',this)">住家</button>
-    <button class="filter-btn" onclick="setFilter('shop',this)">店面</button>
-    <button class="filter-btn" onclick="setFilter('both',this)">透天混合</button>
-    <button class="filter-btn" onclick="setFilter('new',this)">今日新上架</button>
-  </div>
-  <div class="sort-row">
-    排序：
-    <button class="sort-btn active" onclick="setSort('time',this)">最新</button>
-    <button class="sort-btn" onclick="setSort('price_asc',this)">租金低→高</button>
-    <button class="sort-btn" onclick="setSort('price_desc',this)">租金高→低</button>
-    <button class="sort-btn" onclick="setSort('size',this)">坪數大→小</button>
-  </div>
-  <div class="section-label">符合條件物件</div>
-  <div class="card-list" id="card-list">
-    <div class="no-data">載入中...<small>連接雲端資料庫</small></div>
-  </div>
-</div>
-<script>
-const SUPABASE_URL = "https://zqjcgzfajnxsglrmvfcm.supabase.co";
-const SUPABASE_KEY = "sb_publishable_Z3MLHcGq52qawsGMxeKfsA_gtOV7bZz";
-let allData = [], currentFilter = 'all', currentSort = 'time';
-const TYPE_LABEL = {home:'住家', shop:'店面', both:'透天・店住'};
-const TYPE_TAG   = {home:'tag-home', shop:'tag-shop', both:'tag-home'};
+<h2 style="margin-bottom:1rem">台中租屋監控 - 除錯模式</h2>
+<button class="btn" onclick="test()">測試連線</button>
+<div id="debug" class="debug" style="margin-top:1rem">按「測試連線」開始...</div>
+<div id="results"></div>
 
-function timeAgo(iso) {
-  if (!iso) return '—';
-  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
-  if (diff < 3600) return Math.floor(diff/60) + ' 分鐘前';
-  if (diff < 86400) return Math.floor(diff/3600) + ' 小時前';
-  return Math.floor(diff/86400) + ' 天前';
+<script>
+const URL1 = "https://zqjcgzfajnxsglrmvfcm.supabase.co";
+const KEY1 = "sb_publishable_Z3MLHcGq52qawsGMxeKfsA_gtOV7bZz";
+const KEY2 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxamNnemZham54c2dscm12ZmNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwMTE1MzYsImV4cCI6MjA5MjU4NzUzNn0.aiMCx7kozCJLNEBd56hZiivZCoy3RDaqR6LjSqSqDYQ";
+
+function log(msg) {
+  document.getElementById('debug').textContent += '\n' + msg;
 }
-function isToday(iso) {
-  if (!iso) return false;
-  return new Date(iso).toDateString() === new Date().toDateString();
-}
-function renderCard(p) {
-  const newTag  = p.is_new ? '<span class="tag tag-new">新上架</span>' : '';
-  const typeTag = `<span class="tag ${TYPE_TAG[p.type]||'tag-home'}">${TYPE_LABEL[p.type]||p.type}</span>`;
-  const areaTag = p.district ? `<span class="tag tag-area">${p.district}</span>` : '';
-  const sizeTag = p.size > 0 ? `<span class="tag tag-size">${p.size} 坪</span>` : '';
-  const icons   = (p.tags||[]).map(t=>`<span class="icon-tag">${t}</span>`).join('');
-  const price   = p.price > 0 ? `$${p.price.toLocaleString()}` : '價格洽談';
-  return `
-    <div class="card ${p.is_new?'is-new':''}">
-      <div class="card-row1">
-        <div class="card-title">${p.title||'（無標題）'}</div>
-        <div class="card-price">${price}<span class="price-unit"> /月</span></div>
-      </div>
-      <div class="card-row2">${newTag}${typeTag}${areaTag}${sizeTag}</div>
-      ${icons?`<div class="card-icons">${icons}</div>`:''}
-      <div class="card-footer">
-        <span class="card-meta">${p.source||'—'} · ${timeAgo(p.scraped_at)}</span>
-        ${p.url?`<a class="card-link" href="${p.url}" target="_blank">查看物件 →</a>`:''}
-      </div>
-    </div>`;
-}
-function sortData(data) {
-  const d = [...data];
-  if (currentSort==='price_asc') d.sort((a,b)=>a.price-b.price);
-  else if (currentSort==='price_desc') d.sort((a,b)=>b.price-a.price);
-  else if (currentSort==='size') d.sort((a,b)=>b.size-a.size);
-  else d.sort((a,b)=>new Date(b.scraped_at)-new Date(a.scraped_at));
-  return d;
-}
-function renderList() {
-  let filtered = allData;
-  if (currentFilter==='home') filtered = allData.filter(p=>p.type==='home');
-  else if (currentFilter==='shop') filtered = allData.filter(p=>p.type==='shop');
-  else if (currentFilter==='both') filtered = allData.filter(p=>p.type==='both');
-  else if (currentFilter==='new') filtered = allData.filter(p=>isToday(p.scraped_at));
-  filtered = sortData(filtered);
-  const list = document.getElementById('card-list');
-  if (!filtered.length) {
-    list.innerHTML = '<div class="no-data">目前沒有符合條件的物件<small>等待爬蟲下次掃描...</small></div>';
-    return;
-  }
-  list.innerHTML = filtered.map(renderCard).join('');
-  document.getElementById('s-new').textContent  = allData.filter(p=>isToday(p.scraped_at)).length;
-  document.getElementById('s-both').textContent = allData.filter(p=>p.type==='both').length;
-  document.getElementById('s-home').textContent = allData.filter(p=>p.type==='home').length;
-  document.getElementById('s-shop').textContent = allData.filter(p=>p.type==='shop').length;
-}
-async function loadData() {
-  document.getElementById('scan-status').textContent = '連接中...';
+
+async function test() {
+  document.getElementById('debug').textContent = '開始測試...\n';
+  
+  // 測試1: publishable key
+  log('=== 測試 publishable key ===');
   try {
-    const resp = await fetch(
-      `${SUPABASE_URL}/rest/v1/properties?select=*&order=scraped_at.desc&limit=200`,
-      { headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Cache-Control': 'no-cache'
-        }
-      }
-    );
-    if (!resp.ok) {
-      const err = await resp.text();
-      throw new Error(`${resp.status}: ${err}`);
-    }
-    allData = await resp.json();
-    renderList();
-    const now = new Date();
-    document.getElementById('scan-status').textContent = `共 ${allData.length} 筆物件`;
-    document.getElementById('last-scan').textContent = '更新：' + now.toLocaleTimeString('zh-TW');
+    const r1 = await fetch(`${URL1}/rest/v1/properties?select=id,district&limit=3`, {
+      headers: { 'apikey': KEY1, 'Authorization': `Bearer ${KEY1}` }
+    });
+    log(`狀態碼: ${r1.status}`);
+    const t1 = await r1.text();
+    log(`回應: ${t1.substring(0,300)}`);
   } catch(e) {
-    document.getElementById('scan-status').textContent = '連線失敗：' + e.message;
-    document.getElementById('card-list').innerHTML = '<div class="no-data">連線失敗<small>' + e.message + '</small></div>';
-    console.error(e);
+    log(`錯誤: ${e.message}`);
   }
+
+  // 測試2: anon key (eyJ)
+  log('\n=== 測試 anon key (eyJ) ===');
+  try {
+    const r2 = await fetch(`${URL1}/rest/v1/properties?select=id,district&limit=3`, {
+      headers: { 'apikey': KEY2, 'Authorization': `Bearer ${KEY2}` }
+    });
+    log(`狀態碼: ${r2.status}`);
+    const t2 = await r2.text();
+    log(`回應: ${t2.substring(0,300)}`);
+  } catch(e) {
+    log(`錯誤: ${e.message}`);
+  }
+
+  // 測試3: 不帶任何 key
+  log('\n=== 測試無 key ===');
+  try {
+    const r3 = await fetch(`${URL1}/rest/v1/properties?select=id&limit=1`);
+    log(`狀態碼: ${r3.status}`);
+    const t3 = await r3.text();
+    log(`回應: ${t3.substring(0,200)}`);
+  } catch(e) {
+    log(`錯誤: ${e.message}`);
+  }
+  
+  log('\n=== 完成 ===');
 }
-function setFilter(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderList();
-}
-function setSort(s, btn) {
-  currentSort = s;
-  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderList();
-}
-loadData();
-setInterval(loadData, 5 * 60 * 1000);
 </script>
 </body>
 </html>
